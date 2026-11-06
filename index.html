@@ -52,8 +52,8 @@ canvas#scene{display:block;width:100%;aspect-ratio:16/9;max-width:100%}
 .dlg.noface{grid-template-columns:1fr}
 .face{width:72px;height:72px;image-rendering:pixelated;background:var(--paper2);border:3px solid var(--ink)}
 .face.mface{image-rendering:auto;object-fit:contain;padding:3px}
-.who{font-weight:700;color:var(--orange);text-shadow:1px 1px 0 var(--ink)}
-.who.news{color:var(--red)}
+.who{display:inline-block;font-weight:700;font-size:18px;line-height:1.5;color:var(--ink);background:var(--orange);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);padding:1px 10px;margin-bottom:8px}
+.who.news{background:var(--red);color:#fff}
 .say{font-size:18px;line-height:1.9;min-width:0}
 .dlg .body{min-width:0}
 .next{color:var(--muted);font-size:14px;margin-top:10px;animation:blink 1s steps(2) infinite}
