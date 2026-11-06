@@ -21,8 +21,8 @@ body{color:var(--paper);font-family:var(--px);font-size:16px;line-height:1.7;let
 *{box-sizing:border-box}
 .wrap{max-width:min(800px,max(480px,calc((100vh - 330px) * 16 / 9)));margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .hud{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;min-height:38px}
-.stage-tag{font-weight:700;color:var(--gold);letter-spacing:.04em}
-.stage-name{color:var(--paper);flex:1 1 160px;min-width:0}
+.stage-tag{font-weight:700;font-size:16px;color:var(--ink);background:var(--gold);border:2px solid var(--ink);box-shadow:2px 2px 0 #0e1124;padding:1px 10px;letter-spacing:.04em}
+.stage-name{color:#fff;font-size:16px;font-weight:700;flex:1 1 160px;min-width:0}
 .meters{display:flex;gap:10px;flex-wrap:wrap}
 .meter{display:flex;align-items:center;gap:4px;font-variant-numeric:tabular-nums}
 .meter img{width:20px;height:20px;image-rendering:pixelated}
@@ -913,7 +913,8 @@ async function stage4(){
     await race(say([['kkuri',`${out.includes('D')?'':'반짝반짝은 너무 싸고 너무 빨라. 안전 인증 서류가 비어 있었어! '}${out.includes('B')&&out.includes('C')?'':'으뜸방재와 최고방재는 가격도 제안서도 똑같았어. 수상해! '}너무 좋아 보이는 건 한 번 더 의심해 봐!`]]));
     // 3단계
     SO.chars=[...C,{s:'kkoe',x:208,y:80,flip:true}];
-    const i=await race(choose('kkoe','에이~ 시간 없잖아! 그냥 우리 거 사. 조금 비싸도 빨리 오니까 괜찮잖아? (이 대답은 되돌릴 수 없어요)',['급하니까 그냥 살게요.','으뜸방재랑 최고방재 제안서가 똑같네요. 몰래 짠 거죠?','그럼 제일 싼 반짝반짝으로 할게요.']));
+    const owed=G.flags.bribe&&!G.flags.confessed;
+    const i=await race(choose('kkoe',(owed?'저번에 내 선물 받았잖아~ 그러니까 이번엔 우리 거 사 줘야지? ':G.flags.confessed?'쳇, 감사팀에 다 말했다며? 그래도 이번엔 우리 거 사. ':'에이~ 시간 없잖아! 그냥 우리 거 사. ')+'조금 비싸도 빨리 오니까 괜찮잖아? (이 대답은 되돌릴 수 없어요)',['급하니까 그냥 살게요.','으뜸방재랑 최고방재 제안서가 똑같네요. 몰래 짠 거죠?','그럼 제일 싼 반짝반짝으로 할게요.']));
     if(i===1){ SF.kkoeCaught=true; pts('fair',30); await race(say([['kkoe','으앗! 또 들켰다!'],['tori','업체끼리 몰래 가격을 짜는 건 공정한 경쟁을 망치는 행동이야. 잘 막았어!']])); }
     else {
       pts('tax',-10); pts('fair',-10);
@@ -959,7 +960,7 @@ const EVENTS = [
     await say([['teacher','큰일이에요! 급식실 냉장고가 갑자기 멈췄어요. 내일 점심 재료가 상할까 봐 걱정이에요.']]);
     const i=await choose('tori','어떻게 할까?',['나라장터 긴급 공고로 빠르게 여러 업체를 비교한다','아는 사장님에게 전화해서 바로 맡긴다','다음 달 정기 구매 때까지 기다린다']);
     if(i===0){ pts('happy',10); pts('fair',10); await say([['teacher','하루 만에 새 냉장고가 왔어요! 아이들 점심도 무사해요.'],['tori','급할 때 쓰는 빠른 절차도 있어. 공정함은 지키면서 시간은 아낄 수 있지!']]); }
-    else if(i===1){ pts('happy',5); pts('fair',-15); await say([['kkuri','빨리 고쳐지긴 했지만… 다른 업체들은 경쟁할 기회조차 없었어.'],['tori','세금으로 사는 물건을 아는 사람에게만 맡기면 안 돼. 급해도 공정하게!']]); }
+    else if(i===1){ G.flags.shortcut=true; pts('happy',5); pts('fair',-15); await say([['kkuri','빨리 고쳐지긴 했지만… 다른 업체들은 경쟁할 기회조차 없었어.'],['tori','세금으로 사는 물건을 아는 사람에게만 맡기면 안 돼. 급해도 공정하게!']]); }
     else { pts('happy',-15); await say([['teacher','결국 재료를 버려야 했어요… 내일 점심은 빵과 우유로 바뀌었어요.'],['kkuri','필요한 건 제때 구하는 것도 조달청의 일이야.']]); }
   }},
   { id:'gift', title:'꾀돌이의 수상한 선물', run: async()=>{
@@ -1003,11 +1004,47 @@ const EVENTS = [
     else { pts('fair',-5); pts('happy',-5); await say([['tori','화내기보다 사실을 보여 주는 게 먼저야.']]); }
   }},
 ];
+/* 앞에서 고른 답 때문에 생기는 사건: 조건이 맞으면 무작위 사건보다 먼저 일어남 */
+const FOLLOWUPS = [
+  { id:'audit', title:'감사팀이 찾아왔다', cond:F=>F.bribe, run: async()=>{
+    setScene('office',{chars:[{s:'me',x:42,y:80},{s:'kkuri',x:82,y:60},{s:'city',x:200,y:80,flip:true}]});
+    await say([['city','감사팀이에요. 업체가 직원에게 상품권을 줬다는 제보가 들어왔어요. 혹시 받은 적 있나요?']]);
+    const i=await choose('me','꾀돌이에게 받은 상품권이 아직 서랍에 있어요…',['사실대로 말하고 상품권을 돌려준다','모른다고 숨긴다']);
+    if(i===0){ G.flags.confessed=true; pts('fair',15); await say([['city','솔직하게 말해 줘서 고마워요. 상품권은 돌려주고, 그 업체는 입찰에서 조사할게요.'],['tori','실수를 바로잡는 용기도 공정함이야. 잘했어, {name}.']]); }
+    else { G.flags.hid=true; pts('fair',-20); await say([['city','…알겠어요. 조사는 계속할 거예요.'],['kkuri','{name}, 숨기면 숨길수록 더 큰 문제가 돼…']]); }
+  }},
+  { id:'desk', title:'새봄초 책상 문제', cond:F=>F.s1bad, run: async()=>{
+    setScene('classroom',{chars:[{s:'teacher',x:200,y:56,flip:true},{s:'me',x:12,y:56}]});
+    const cheap=G.flags.s1bad==='cheap';
+    await say([['teacher', cheap?'흔들리는 책상 때문에 아이가 넘어질 뻔했어요. 어떻게 하면 좋을까요?':'아직도 몇 반은 낡은 책상을 쓰고 있어요. 아이들이 불편해해요.']]);
+    const i=await choose('tori','책상 문제를 어떻게 해결할까?', cheap
+      ? ['계약 조건대로 업체에 교환을 요구하고, 안전 인증 제품으로 다시 공고한다','테이프로 고쳐서 그냥 쓴다']
+      : ['나무숲공방과 납품 일정을 다시 맞추고, 그동안 쓸 임시 책상을 빌린다','어차피 곧 오니까 그냥 기다린다']);
+    if(i===0){ G.flags.s1fixed=true; pts('tax',-5); pts('happy',15); await say([['teacher','이제 아이들이 안심하고 공부해요. 끝까지 챙겨 줘서 고마워요!'],['kkuri','계약하고 끝이 아니야. 제대로 왔는지 끝까지 확인하는 것도 조달청의 일이지!']]); }
+    else { pts('happy',-15); await say([['teacher','…알겠어요. 아이들한테 조심하라고 할게요.'],['tori','문제를 그냥 두면 결국 아이들이 불편해져.']]); }
+  }},
+  { id:'alley', title:'여전히 어두운 골목길', cond:F=>F.s2bad, run: async()=>{
+    setScene('street',{chars:[{s:'me',x:44,y:70},{s:'city',x:200,y:70,flip:true}]});
+    await say([['news','어젯밤 어두운 골목길에서 자전거 사고가 날 뻔했어요.'],['city','역시 골목길이 문제예요. 지금이라도 방법이 있을까요?']]);
+    const i=await choose('kkuri','어떻게 할까?',['반딧불랩의 AI 안전 카메라를 추가로 계약한다','예산이 부족하니 내년으로 미룬다']);
+    if(i===0){ G.flags.s2fixed=true; pts('tax',-10); pts('happy',20); await say([['city','골목길이 드디어 밝아졌어요! 주민들이 정말 좋아해요.'],['tori','처음 고를 때 문제를 잘 봤다면 돈을 두 번 안 써도 됐을 거야. 그래도 바로잡아서 다행이야!']]); }
+    else { pts('happy',-15); await say([['city','주민들이 많이 실망했어요…']]); }
+  }},
+  { id:'protest', title:'다른 업체들의 항의', cond:F=>F.shortcut, run: async()=>{
+    setScene('office',{chars:[{s:'me',x:42,y:80},{s:'boss1',x:170,y:80,flip:true},{s:'boss3',x:206,y:80,flip:true}]});
+    await say([['b1','급식실 냉장고, 아는 사람한테만 맡겼다면서요? 저희는 기회조차 없었어요!'],['b2','공공기관 일은 모두에게 공평해야 하잖아요.']]);
+    const i=await choose('me','사장님들이 화가 났어요.',['잘못을 인정하고, 앞으로는 급해도 나라장터로 공개 경쟁하겠다고 약속한다','급해서 어쩔 수 없었다고 변명한다']);
+    if(i===0){ pts('fair',15); await say([['b1','그렇게 약속해 주시면 저희도 믿을게요.'],['tori','급할 때 쓰는 빠른 공개 절차도 있다는 걸 잊지 말자!']]); }
+    else { pts('fair',-10); await say([['b2','급하면 규칙을 어겨도 된다는 건가요…?'],['kkuri','변명보다 바로잡는 게 먼저야.']]); }
+  }},
+];
 async function villageEvent(pool){
-  const ev=pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+  const fu=FOLLOWUPS.find(f=>f.cond(G.flags)&&!G.flags['done_'+f.id]);
+  const ev= fu || pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+  if(fu) G.flags['done_'+fu.id]=true;
   setStage('마을 사건',ev.title); setScene('village',{chars:[]}); beep('alarm');
   stageScore={tax:0,fair:0,happy:0}; hud();
-  await button(h(`<div class="stack">${'<div class="news"><b>마을 사건 발생!</b><br>'+esc(ev.title)+'</div>'}<p class="muted small">이번 선택은 되돌릴 수 없어요. 고르는 답에 따라 결과와 엔딩이 달라져요.</p></div>`),'사건 해결하러 가기');
+  await button(h(`<div class="stack">${'<div class="news"><b>'+(fu?'지난 선택이 불러온 사건!':'마을 사건 발생!')+'</b><br>'+esc(ev.title)+'</div>'}<p class="muted small">${fu?'앞에서 내린 선택 때문에 생긴 일이에요. ':''}이번 선택은 되돌릴 수 없어요. 고르는 답에 따라 결과와 엔딩이 달라져요.</p></div>`),'사건 해결하러 가기');
   await ev.run();
   for(const k in stageScore) G.score[k]+=stageScore[k]; stageScore={tax:0,fair:0,happy:0}; hud();
 }
@@ -1036,21 +1073,21 @@ async function ending(){
   setStage('엔딩','오늘을 지키고, 내일을 잇다'); $('#timer').hidden=true;
   setScene('village',{chars:[{s:'tori',x:76,y:70},{s:'me',x:112,y:70},{s:'kkuri',x:148,y:70}]});
   const s=G.score, total=s.tax+s.fair+s.happy, F=G.flags;
-  const endId = F.bribe ? 'trust' : !F.kkoeCaught ? 'kkoe' : (total>=330 && !F.s1bad && !F.s2bad) ? 'best' : 'normal';
+  const endId = (F.bribe && !F.confessed) ? 'trust' : !F.kkoeCaught ? 'kkoe' : (total>=400 && (!F.s1bad||F.s1fixed) && (!F.s2bad||F.s2fixed) && !F.bribe) ? 'best' : 'normal';
   const END=ENDINGS[endId];
   await sayOne('me','처음 지나갔던 학교 앞이네. 아침이랑 똑같아 보이는데, 이제는 다르게 보여.');
   if(endId==='kkoe') SO.chars=[...SO.chars,{s:'kkoe',x:212,y:70,flip:true}];
   await say(END.lines);
   const seen=new Set(); try{ (JSON.parse(localStorage.getItem('jodal-endings-v1')||'[]')||[]).forEach(e=>{ if(ENDINGS[e]) seen.add(e); }); }catch(e){}
   seen.add(endId); try{ localStorage.setItem('jodal-endings-v1',JSON.stringify([...seen])); }catch(e){}
-  const rank= total>=330?'프로 조달러': total>=220?'똑똑한 조달러':'새내기 조달러';
+  const rank= total>=400?'프로 조달러': total>=220?'똑똑한 조달러':'새내기 조달러';
   const box=h(`<div class="stack" style="text-align:center;align-items:center">
     <span class="pill ${endId==='best'?'ok':endId==='normal'?'warn':'bad'}">엔딩 · ${esc(END.title)}</span>
     <h2>당신의 일상 뒤에, 조달청이 있습니다.</h2>
     <div class="rank">${esc(G.name)} · ${rank}</div>
     <p class="small muted">발견한 엔딩 ${seen.size} / ${Object.keys(ENDINGS).length} · 다른 선택을 하면 다른 엔딩을 볼 수 있어요.</p>
     <div class="result" style="width:100%"><div>세금 절약<b>${s.tax}</b></div><div>공정<b>${s.fair}</b></div><div>시민 행복<b>${s.happy}</b></div></div>
-    <p>총점 <b>${total}</b>점 <span class="muted small">(프로 조달러 330점 이상 · 똑똑한 조달러 220점 이상)</span></p>
+    <p>총점 <b>${total}</b>점 <span class="muted small">(프로 조달러 400점 이상 · 똑똑한 조달러 220점 이상)</span></p>
     ${JUST_UNLOCKED?'<p class="unlock">축하해요! 모든 스테이지를 깨서 첫 화면에 <b>스테이지 바로 가기</b>가 열렸어요.</p>':''}
     <div class="row" style="justify-content:center"><button class="btn" type="button" data-focus id="againBtn">처음으로 돌아가기</button></div>
     <p class="note">이 게임에 나오는 업체, 제품, 가격, 사건은 조달청의 일을 쉽게 알리기 위해 지어낸 이야기예요. 실제 조달 절차는 더 자세한 규칙에 따라 진행돼요.</p>
@@ -1081,6 +1118,7 @@ function helpScreen(){
       <section><h3>선택과 사건</h3><ul>
         <li><b>선택의 결과:</b> 어떤 업체와 계약하는지, 꾀돌이에게 어떻게 대답하는지에 따라 이야기와 점수가 달라져요.</li>
         <li><b>마을 사건:</b> 스테이지 사이마다 무작위로 사건이 하나씩 생겨요. 할 때마다 다른 사건을 만날 수 있어요.</li>
+        <li><b>선택이 불러오는 사건:</b> 앞에서 잘못 고른 게 있으면 뒤에서 그 일을 바로잡을 사건이 먼저 찾아와요. 업체 선물을 받았다면 꾀돌이가 그걸 핑계로 다시 찾아와요.</li>
         <li><b>여러 엔딩:</b> 내린 선택에 따라 엔딩이 4가지로 갈려요. 모두 찾아보세요!</li></ul></section>
       <section><h3>스테이지 소개</h3><ol>
         <li><b>나라장터에서 공정하게 사기</b> – 학교 책상 100개! 몰래 짠 업체 3곳을 찾고 조건에 맞는 업체와 계약해요.</li>
@@ -1089,7 +1127,7 @@ function helpScreen(){
         <li><b>꾀돌이의 반격</b> – 3분 안에 소방관의 새 방화복을 구해요. 지금까지 배운 걸 모두 써야 해요.</li></ol>
         <p class="small muted">스테이지에 실패하면 그 스테이지만 처음부터 다시 도전해요.</p></section>
       <section><h3>칭호</h3>
-        <p>총점이 <b>330점 이상</b>이면 프로 조달러, <b>220점 이상</b>이면 똑똑한 조달러, 그 아래는 새내기 조달러예요.</p>
+        <p>총점이 <b>400점 이상</b>이면 프로 조달러, <b>220점 이상</b>이면 똑똑한 조달러, 그 아래는 새내기 조달러예요.</p>
         <p>모든 스테이지를 한 번씩 깨면 첫 화면에 <b>스테이지 바로 가기</b>가 열려요.</p></section>
       <p class="note">게임에 나오는 업체, 제품, 가격, 사건은 조달청의 일을 쉽게 알리기 위해 지어낸 이야기예요.</p>
       <div class="row"><button class="btn" type="button" id="helpDone" data-focus>돌아가기</button></div>
