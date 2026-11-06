@@ -15,11 +15,11 @@
   color-scheme:dark;
 }
 html,body{background:var(--night)}
-body{color:var(--paper);font-family:var(--px);font-size:17px;line-height:1.85;letter-spacing:.03em;word-break:keep-all;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 32px;
+body{color:var(--paper);font-family:var(--px);font-size:16px;line-height:1.7;letter-spacing:.02em;word-break:keep-all;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px 16px;
   background-image:radial-gradient(var(--night2) 1px,transparent 1px);background-size:6px 6px}
 *{box-sizing:border-box}
-.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.wrap{max-width:min(800px,max(480px,calc((100vh - 330px) * 16 / 9)));margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .hud{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;min-height:38px}
 .stage-tag{font-weight:700;color:var(--gold);letter-spacing:.04em}
 .stage-name{color:var(--paper);flex:1 1 160px;min-width:0}
@@ -30,39 +30,40 @@ body{color:var(--paper);font-family:var(--px);font-size:17px;line-height:1.85;le
 .icon-btn{font:inherit;background:transparent;color:var(--paper);border:2px solid var(--paper);padding:0 8px;cursor:pointer}
 .screen{position:relative;border:4px solid var(--ink);box-shadow:0 0 0 2px var(--paper2),6px 6px 0 2px #0e1124;background:var(--ink)}
 canvas#scene{display:block;width:100%;aspect-ratio:16/9;max-width:100%}
+body.compact canvas#scene{width:auto;height:clamp(110px,19vh,200px);margin:0 auto}
 .toasts{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-end;pointer-events:none}
 .toast{background:var(--ink);color:var(--paper);border:2px solid var(--paper);padding:2px 10px;font-size:15px;animation:rise 1.6s steps(8) forwards}
 .toast.plus{border-color:var(--gold);color:var(--gold)}.toast.minus{border-color:var(--red);color:#ff9aa8}
 @keyframes rise{0%{transform:translateY(6px);opacity:0}15%{transform:none;opacity:1}80%{opacity:1}100%{transform:translateY(-12px);opacity:0}}
-.panel{background:var(--paper);color:var(--ink);border:4px solid var(--ink);box-shadow:6px 6px 0 #0e1124;padding:20px 24px;min-height:190px}
-.panel h2{font-size:22px;margin:0 0 10px;text-wrap:balance}
-.panel h3{font-size:18px;margin:0 0 6px}
+.panel{background:var(--paper);color:var(--ink);border:4px solid var(--ink);box-shadow:6px 6px 0 #0e1124;padding:14px 18px;min-height:170px}
+.panel h2{font-size:20px;margin:0 0 6px;text-wrap:balance}
+.panel h3{font-size:17px;margin:0 0 4px}
 .panel p{margin:0}
 .muted{color:var(--muted)}
-.stack{display:flex;flex-direction:column;gap:16px}
+.stack{display:flex;flex-direction:column;gap:10px}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.btn{font:inherit;font-weight:700;background:var(--orange);color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:9px 18px;cursor:pointer}
+.btn{font:inherit;font-weight:700;background:var(--orange);color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:6px 16px;cursor:pointer}
 .btn:hover{background:#ff925e}.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
 .btn.alt{background:var(--card)}.btn.alt:hover{background:#fff}
 .btn:disabled{background:var(--paper2);color:var(--muted);cursor:not-allowed;box-shadow:none}
 .btn:focus-visible,.card:focus-visible,.icon-btn:focus-visible,input:focus-visible{outline:3px dashed var(--orange);outline-offset:2px}
 .choices{display:flex;flex-direction:column;gap:12px}
 .choices .btn{text-align:left;font-weight:400}
-.dlg{display:grid;grid-template-columns:72px 1fr;gap:16px;cursor:pointer;min-height:150px}
+.dlg{display:grid;grid-template-columns:64px 1fr;gap:14px;cursor:pointer;min-height:130px}
 .dlg.noface{grid-template-columns:1fr}
-.face{width:72px;height:72px;image-rendering:pixelated;background:var(--paper2);border:3px solid var(--ink)}
+.face{width:64px;height:64px;image-rendering:pixelated;background:var(--paper2);border:3px solid var(--ink)}
 .face.mface{image-rendering:auto;object-fit:contain;padding:3px}
-.who{display:inline-block;font-weight:700;font-size:18px;line-height:1.5;color:var(--ink);background:var(--orange);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);padding:1px 10px;margin-bottom:8px}
+.who{display:inline-block;font-weight:700;font-size:16px;line-height:1.5;color:var(--ink);background:var(--orange);border:2px solid var(--ink);box-shadow:2px 2px 0 var(--ink);padding:1px 10px;margin-bottom:6px}
 .who.news{background:var(--red);color:#fff}
-.say{font-size:18px;line-height:1.9;min-width:0}
+.say{font-size:17px;line-height:1.75;min-width:0}
 .dlg .body{min-width:0}
 .next{color:var(--muted);font-size:14px;margin-top:10px;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-.card{background:var(--card);border:3px solid var(--ink);padding:12px 14px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);position:relative;display:flex;flex-direction:column;gap:4px;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.card{background:var(--card);border:3px solid var(--ink);padding:8px 12px;cursor:pointer;text-align:left;font:inherit;color:var(--ink);position:relative;display:flex;flex-direction:column;gap:4px;min-width:0}
 .card:hover{background:#fff}
-.card .name{font-weight:700;font-size:18px}
-.card .memo{font-size:15px;color:var(--muted);border-top:2px dotted var(--paper2);padding-top:4px;margin-top:4px}
+.card .name{font-weight:700;font-size:17px}
+.card .memo{font-size:14px;color:var(--muted);border-top:2px dotted var(--paper2);padding-top:4px;margin-top:4px}
 .card .tag{position:absolute;right:-3px;top:-3px;padding:0 8px;font-size:14px;font-weight:700;border:3px solid var(--ink)}
 .card.flag{border-color:var(--red);box-shadow:inset 0 0 0 2px var(--red)}
 .card.flag .tag{background:var(--red);color:var(--paper)}
@@ -92,7 +93,7 @@ canvas#scene{display:block;width:100%;aspect-ratio:16/9;max-width:100%}
 .bar{height:12px;border:3px solid var(--ink);background:var(--card)}
 .bar i{display:block;height:100%;background:var(--orange)}
 .title-card{text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
-.logo{font-weight:700;font-size:34px;line-height:1.25;color:var(--ink);text-shadow:3px 3px 0 var(--orange);text-wrap:balance}
+.logo{font-weight:700;font-size:30px;line-height:1.25;color:var(--ink);text-shadow:3px 3px 0 var(--orange);text-wrap:balance}
 .field{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
 input#pname{font:inherit;font-size:18px;border:3px solid var(--ink);padding:6px 10px;background:var(--card);color:var(--ink);width:12ch}
 .small{font-size:14px}
@@ -112,7 +113,7 @@ input#pname{font:inherit;font-size:18px;border:3px solid var(--ink);padding:6px 
 .help p{max-width:65ch}
 .unlock{background:var(--gold);border:3px solid var(--ink);padding:6px 10px;color:var(--ink)}
 .note{font-size:14px;color:var(--muted);border-top:2px dotted var(--paper2);padding-top:6px}
-@media (max-width:480px){.panel{padding:16px}.dlg{grid-template-columns:52px 1fr}.face{width:52px;height:52px}.logo{font-size:27px}.result b{font-size:20px}body{font-size:16px}.say{font-size:17px}}
+@media (max-width:480px){.panel{padding:16px}.dlg{grid-template-columns:52px 1fr}.face{width:52px;height:52px}.logo{font-size:27px}.result b{font-size:20px}body{font-size:15px}.say{font-size:16px}}
 @media (prefers-reduced-motion:reduce){.toast,.next{animation:none}}
 </style>
 <style>html{color-scheme:dark}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
@@ -149,7 +150,7 @@ cv.width = W*K; cv.height = H*K;
 const panel = $('#panel');
 const wait = ms => new Promise(r => setTimeout(r, ms));
 function h(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
-function setPanel(node){ advance=null; panel.replaceChildren(node); const f=node.querySelector('[data-focus]'); if(f) f.focus({preventScroll:true}); }
+function setPanel(node){ advance=null; panel.replaceChildren(node); document.body.classList.toggle('compact', !!node.querySelector('.grid,.factory,.result')); /* 카드가 많은 화면은 위 그림을 줄여 한 화면에 들어오게 */ const f=node.querySelector('[data-focus]'); if(f) f.focus({preventScroll:true}); }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ================= 캐릭터 =================
@@ -324,8 +325,10 @@ function beep(kind='tick'){
 $('#soundBtn').onclick=()=>{ soundOn=!soundOn; $('#soundBtn').textContent=soundOn?'소리 켬':'소리 끔'; };
 
 /* ================= 점수 ================= */
-const G = { name:'새내기', score:{tax:0,fair:0,happy:0} };
+const G = { name:'새내기', score:{tax:0,fair:0,happy:0}, flags:{} };
 let stageScore = {tax:0,fair:0,happy:0};
+let SF = {}; // 이번 스테이지에서 내린 선택(성공해야 G.flags에 남음)
+const shuffle = a => { const b=[...a]; for(let i=b.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [b[i],b[j]]=[b[j],b[i]]; } return b; };
 const LABEL = {tax:'세금 절약', fair:'공정', happy:'시민 행복'};
 function hud(){
   $('#mTax').textContent = G.score.tax+stageScore.tax;
@@ -619,9 +622,9 @@ async function stage1(){
     ['kkuri','업체 6곳이 제안서를 냈어!'],
     ['tori','잠깐! 고르기 전에 수상한 점이 없는지 먼저 살펴보자. 서로 몰래 짜고 가격을 맞춘 업체가 섞여 있을지도 몰라.'],
   ]);
-  let tries=0;
+  let tries=0; const bidOrder=shuffle(BIDS);
   while(true){
-    const sel=await pickCards(BIDS,{mode:'multi',need:3,prompt:'수상한 업체 3곳을 찾아 신고하세요',btn:'신고하기',tag:'신고',render:bidCard});
+    const sel=await pickCards(bidOrder,{mode:'multi',need:3,prompt:'수상한 업체 3곳을 찾아 신고하세요',btn:'신고하기',tag:'신고',render:bidCard});
     tries++;
     const ok=sel.every(id=>BIDS.find(b=>b.id===id).collude);
     if(ok){ pts('fair', tries===1?30:15); break; }
@@ -634,18 +637,29 @@ async function stage1(){
     ['kkuri','입찰 담합은 법으로 금지된 행동이야. 공정한 경쟁을 망치고 세금을 낭비하게 만들거든.'],
   ]);
   SO.chars=C;
-  const rest=BIDS.filter(b=>!b.collude);
-  while(true){
-    const id=await pickCards(rest,{prompt:'남은 업체 중 계약할 곳을 고르세요',btn:'이 업체와 계약하기',tag:'계약',render:bidCard});
-    if(id==='barun'){ pts('tax',30); pts('happy',20); break; }
-    if(id==='ssada'){ pts('fair',-10); await say([['tori','제일 싸지만 안전 인증이 없어! 아이들이 매일 쓰는 책상인데 위험할 수 있어. 싸다고 무조건 좋은 건 아니야.']]); }
-    if(id==='namu'){ pts('happy',-10); await say([['kkuri','품질은 최고지만 납품까지 20일이 걸려. 공고 조건은 14일 안이었지? 개학 날 아이들 책상이 없게 돼!']]); }
-  }
+  const rest=bidOrder.filter(b=>!b.collude);
+  const id=await pickCards(rest,{prompt:'남은 업체 중 계약할 곳을 고르세요 (계약은 되돌릴 수 없어요!)',btn:'이 업체와 계약하기',tag:'계약',render:bidCard});
   setScene('classroom',{chars:[{s:'teacher',x:200,y:56,flip:true},{s:'me',x:12,y:56}]});
-  await say([
-    ['teacher','책상이 딱 맞게 도착했어요! 높이도 조절돼서 아이들이 정말 좋아해요. 고마워요!'],
-    ['kkuri','조건에 맞고, 품질 좋고, 가격도 알맞은 곳을 골랐어. 세금도 아꼈고!'],
-  ]);
+  if(id==='barun'){
+    pts('tax',30); pts('happy',20);
+    await say([
+      ['teacher','책상이 딱 맞게 도착했어요! 높이도 조절돼서 아이들이 정말 좋아해요. 고마워요!'],
+      ['kkuri','조건에 맞고, 품질 좋고, 가격도 알맞은 곳을 골랐어. 세금도 아꼈고!'],
+    ]);
+  } else if(id==='ssada'){
+    SF.s1bad='cheap'; pts('tax',10); pts('fair',-10); pts('happy',-20);
+    await say([
+      ['teacher','책상이 빨리 오긴 했는데… 일주일 만에 다리가 흔들려서 몇 개는 쓰지 못하게 됐어요.'],
+      ['tori','제일 싸지만 안전 인증이 없었어! 아이들이 매일 쓰는 책상인데 위험할 수 있어. 싸다고 무조건 좋은 건 아니야.'],
+      ['kkuri','결국 다시 사야 해서 아낀 돈보다 더 들게 생겼어. 다음엔 조건부터 꼭 확인하자.'],
+    ]);
+  } else {
+    SF.s1bad='late'; pts('happy',-20);
+    await say([
+      ['teacher','책상은 정말 예뻐요. 그런데 개학 날에 도착하지 않아서, 아이들이 2주 동안 낡은 책상을 써야 했어요.'],
+      ['kkuri','품질은 최고지만 납품까지 20일이 걸렸어. 공고 조건은 14일 안이었지? 조건을 지키는 것도 품질만큼 중요해!'],
+    ]);
+  }
   await lesson('스테이지 1 성공!',[
     '나라장터는 공공기관이 물건·공사·서비스를 사고 계약하는 온라인 시스템이고, 조달청이 운영해요.',
     '과정이 공개되어 여러 업체가 공정하게 경쟁할 수 있어요.',
@@ -698,16 +712,22 @@ async function stage2(){
   if(missed.length){ missed.forEach(i=>HO.found.add(i.id)); await say([['kkuri',`시간이 다 됐어! 못 찾은 건 내가 표시해 둘게: ${missed.map(i=>i.name).join(', ')}.`]]); }
   else { const bonus=Math.min(15,Math.floor(r.left/4)); if(bonus>0) pts('tax',bonus); await say([['kkuri','와, 3개 모두 찾았어! 남은 시간만큼 보너스야.']]); }
   if(r.decoy===0) pts('fair',10);
-  while(true){
-    const i=await choose('city','밤길이 어두운 우리 마을에는 어떤 기술이 가장 도움이 될까요?',HIDDEN.map(x=>`${x.name} – ${x.desc}`));
-    if(HIDDEN[i].id==='cam'){ pts('happy',20); break; }
-    pts('happy',-5); await say([['tori','좋은 기술이지만 밤길 안전과는 조금 거리가 있어. 시청이 뭐가 걱정이라고 했는지 다시 떠올려 봐!']]);
+  const pick2=await choose('city','밤길이 어두운 우리 마을에는 어떤 기술이 가장 도움이 될까요? (한 번만 고를 수 있어요)',HIDDEN.map(x=>`${x.name} – ${x.desc}`));
+  if(HIDDEN[pick2].id==='cam'){ pts('happy',20); await say([['city','골목길이 환해졌어요! 이제 주민들이 밤에도 마음 놓고 다녀요.']]); }
+  else {
+    SF.s2bad=true; pts('happy',-15);
+    await say([
+      ['city','좋은 기술이긴 한데… 밤이 되면 골목길은 여전히 어두워요. 주민들이 아직 불안해해요.'],
+      ['tori','좋은 기술이지만 밤길 안전과는 조금 거리가 있었어. 시청이 뭐가 걱정이라고 했는지 먼저 떠올렸어야 해!'],
+    ]);
   }
   setScene('grow',{chars:[{s:'boss2',x:40,y:80},{s:'kkuri',x:186,y:80,flip:true}]});
   await say([
     ['tori','조달청은 새롭고 뛰어난 기술을 가진 제품을 “혁신제품”으로 지정해. 그러면 공공기관이 그 제품을 먼저 사서 써 볼 수 있어.'],
     ['kkuri','작은 기업은 처음 물건을 팔 곳을 찾기가 어렵거든. 나라가 첫 손님이 되어 주면 쑥쑥 클 수 있지!'],
-    ['boss','안녕하세요, 반딧불랩 대표예요. 공공기관에 처음 제품을 팔게 되면서 회사가 이렇게 커졌어요. 고맙습니다!'],
+    SF.s2bad
+      ? ['boss','안녕하세요, 반딧불랩 대표예요. 다른 공공기관이 저희 제품을 먼저 써 줘서 회사가 커졌어요. 다음엔 이 마을 골목도 꼭 밝혀 드릴게요!']
+      : ['boss','안녕하세요, 반딧불랩 대표예요. 공공기관에 처음 제품을 팔게 되면서 회사가 이렇게 커졌어요. 고맙습니다!'],
   ]);
   await lesson('스테이지 2 성공!',[
     '조달청은 새롭고 뛰어난 기술을 가진 제품을 “혁신제품”으로 지정해요.',
@@ -893,12 +913,13 @@ async function stage4(){
     await race(say([['kkuri',`${out.includes('D')?'':'반짝반짝은 너무 싸고 너무 빨라. 안전 인증 서류가 비어 있었어! '}${out.includes('B')&&out.includes('C')?'':'으뜸방재와 최고방재는 가격도 제안서도 똑같았어. 수상해! '}너무 좋아 보이는 건 한 번 더 의심해 봐!`]]));
     // 3단계
     SO.chars=[...C,{s:'kkoe',x:208,y:80,flip:true}];
-    while(true){
-      const i=await race(choose('kkoe','에이~ 시간 없잖아! 그냥 우리 거 사. 조금 비싸도 빨리 오니까 괜찮잖아?',['급하니까 그냥 살게요.','으뜸방재랑 최고방재 제안서가 똑같네요. 몰래 짠 거죠?','그럼 제일 싼 반짝반짝으로 할게요.']));
-      if(i===1){ pts('fair',30); await race(say([['kkoe','으앗! 또 들켰다!'],['tori','업체끼리 몰래 가격을 짜는 건 공정한 경쟁을 망치는 행동이야. 잘 막았어!']])); break; }
-      pts('tax',-10);
-      if(i===0) await race(say([['tori','비싼 값을 냈는데 똑같은 물건이 왔어… 세금이 날아가 버렸어! 다시 골라 보자.']]));
-      else await race(say([['kkuri','방화복이 불에 약해서 출동 직전에 돌려보내야 했어. 싸다고 좋은 게 아니야, 안전이 제일 중요해! 다시 골라 보자.']]));
+    const i=await race(choose('kkoe','에이~ 시간 없잖아! 그냥 우리 거 사. 조금 비싸도 빨리 오니까 괜찮잖아? (이 대답은 되돌릴 수 없어요)',['급하니까 그냥 살게요.','으뜸방재랑 최고방재 제안서가 똑같네요. 몰래 짠 거죠?','그럼 제일 싼 반짝반짝으로 할게요.']));
+    if(i===1){ SF.kkoeCaught=true; pts('fair',30); await race(say([['kkoe','으앗! 또 들켰다!'],['tori','업체끼리 몰래 가격을 짜는 건 공정한 경쟁을 망치는 행동이야. 잘 막았어!']])); }
+    else {
+      pts('tax',-10); pts('fair',-10);
+      if(i===0) await race(say([['tori','잠깐! 계약서에 도장을 찍기 직전에 똑같은 제안서를 발견했어. 비싼 값에 살 뻔했어!']]));
+      else await race(say([['kkuri','반짝반짝 방화복 견본이 불꽃 시험에서 녹아 버렸어! 싸다고 좋은 게 아니야, 안전이 제일 중요해.']]));
+      await race(say([['kkoe','흐흐, 그 틈에 난 이만 빠져나간다~!'],['tori','앗, 꾀돌이가 도망쳤어! 수상한 점은 그 자리에서 바로 말했어야 했는데…']]));
     }
     SO.chars=C;
     // 4단계
@@ -931,20 +952,103 @@ async function stage4(){
   }
 }
 
+/* ================= 마을 사건 (스테이지 사이에 무작위로 하나씩) ================= */
+const EVENTS = [
+  { id:'fridge', title:'급식실 냉장고가 멈췄다!', run: async()=>{
+    setScene('classroom',{chars:[{s:'teacher',x:200,y:56,flip:true},{s:'me',x:12,y:56}]});
+    await say([['teacher','큰일이에요! 급식실 냉장고가 갑자기 멈췄어요. 내일 점심 재료가 상할까 봐 걱정이에요.']]);
+    const i=await choose('tori','어떻게 할까?',['나라장터 긴급 공고로 빠르게 여러 업체를 비교한다','아는 사장님에게 전화해서 바로 맡긴다','다음 달 정기 구매 때까지 기다린다']);
+    if(i===0){ pts('happy',10); pts('fair',10); await say([['teacher','하루 만에 새 냉장고가 왔어요! 아이들 점심도 무사해요.'],['tori','급할 때 쓰는 빠른 절차도 있어. 공정함은 지키면서 시간은 아낄 수 있지!']]); }
+    else if(i===1){ pts('happy',5); pts('fair',-15); await say([['kkuri','빨리 고쳐지긴 했지만… 다른 업체들은 경쟁할 기회조차 없었어.'],['tori','세금으로 사는 물건을 아는 사람에게만 맡기면 안 돼. 급해도 공정하게!']]); }
+    else { pts('happy',-15); await say([['teacher','결국 재료를 버려야 했어요… 내일 점심은 빵과 우유로 바뀌었어요.'],['kkuri','필요한 건 제때 구하는 것도 조달청의 일이야.']]); }
+  }},
+  { id:'gift', title:'꾀돌이의 수상한 선물', run: async()=>{
+    setScene('office',{chars:[{s:'me',x:42,y:80},{s:'kkoe',x:200,y:80,flip:true}]});
+    await say([['kkoe','{name} 씨, 첫 출근 축하해요~ 이건 작은 선물이에요. 다음 입찰 때 우리 회사 좀 잘 봐 줘요, 흐흐.']]);
+    const i=await choose('me','선물 상자 안에 반짝이는 상품권이 보여요.',['정중히 거절하고 사실대로 보고한다','받아 둔다. 작은 선물인데 뭐 어때','거절만 하고 아무에게도 말하지 않는다']);
+    if(i===0){ pts('fair',20); await say([['kkoe','쳇, 융통성 없기는!'],['tori','잘했어! 업체에게 선물을 받으면 공정한 판단이 흔들려. 보고까지 하면 다른 직원도 지킬 수 있지.']]); }
+    else if(i===1){ G.flags.bribe=true; pts('fair',-30); await say([['kkoe','흐흐, 고마워요~ 그럼 다음에 봐요!'],['kkuri','{name}… 그건 받으면 안 되는 거야. 공정해야 할 사람이 한쪽 편을 들게 되거든.']]); }
+    else { pts('fair',5); await say([['tori','거절한 건 잘했어. 그런데 꾀돌이가 다른 직원에게도 똑같이 할 수 있으니까, 알리는 게 더 좋아.']]); }
+  }},
+  { id:'rain', title:'폭우로 도로가 패였다!', run: async()=>{
+    setScene('street',{chars:[{s:'me',x:44,y:70},{s:'city',x:200,y:70,flip:true}]});
+    await say([['news','밤새 내린 폭우로 학교 앞 도로가 패였어요!'],['city','아이들 등굣길이라 위험해요. 빨리 고쳐야 해요!']]);
+    const i=await choose('kkuri','어떤 업체에 복구 공사를 맡길까?',['안전 기준을 지키고 공사 기간도 알맞은 업체','제일 싸게 해 준다는 업체','유명하고 제일 비싼 업체']);
+    if(i===0){ pts('happy',15); pts('tax',5); await say([['city','알맞은 값에 튼튼하게 고쳐졌어요. 아이들도 안전하게 학교에 가요!']]); }
+    else if(i===1){ pts('tax',5); pts('happy',-15); await say([['city','싸게 고쳤는데 한 달 만에 또 패였어요… 다시 공사해야 해요.'],['tori','싼 게 결국 더 비싸질 때도 있어.']]); }
+    else { pts('tax',-15); pts('happy',5); await say([['tori','튼튼하긴 한데, 이름값까지 세금으로 낸 셈이야. 비싸다고 꼭 좋은 건 아니야.']]); }
+  }},
+  { id:'sme', title:'작은 회사 사장님의 고민', run: async()=>{
+    setScene('office',{chars:[{s:'me',x:42,y:80},{s:'kkuri',x:82,y:60},{s:'boss5',x:200,y:80,flip:true}]});
+    await say([['b4','안녕하세요! 저희는 작은 회사인데, 공공기관에 물건을 팔려면 어떻게 해야 할지 모르겠어요.']]);
+    const i=await choose('b4','도와주실 수 있나요?',['나라장터에 업체로 등록하는 방법을 차근차근 알려 준다','바쁘니까 다음에 오라고 한다','아는 공무원을 소개해 주겠다고 한다']);
+    if(i===0){ pts('happy',15); pts('fair',5); await say([['b4','이렇게 쉬운 줄 몰랐어요. 당장 등록할게요!'],['tori','누구나 나라장터에 등록하면 공정하게 경쟁할 수 있어. 좋은 기업이 많아질수록 마을도 좋아지지!']]); }
+    else if(i===1){ pts('happy',-10); await say([['b4','아… 알겠습니다.'],['kkuri','작은 기업에게는 첫걸음이 제일 어려워. 조금만 시간을 냈다면 좋았을 텐데.']]); }
+    else { pts('fair',-15); await say([['tori','아는 사람을 통하는 건 공정하지 않아. 모두 같은 길로, 나라장터에서 경쟁해야 해.']]); }
+  }},
+  { id:'slide', title:'놀이터에 새 미끄럼틀을!', run: async()=>{
+    setScene('village',{chars:[{s:'me',x:70,y:100,sc:1},{s:'city',x:180,y:100,sc:1,flip:true}]});
+    await say([['city','공원 놀이터에 새 미끄럼틀을 놓으려고 해요. 후보가 두 개 있어요.']]);
+    const i=await choose('city','어떤 걸 고를까요?',['안전 인증이 있고 모서리가 둥근 미끄럼틀','반짝반짝 예쁘지만 안전 인증이 없는 미끄럼틀','둘 다 비싸니까 이번엔 사지 않는다']);
+    if(i===0){ pts('happy',15); await say([['city','아이들이 줄을 서서 타고 있어요. 부모님들도 안심하세요!']]); }
+    else if(i===1){ pts('happy',-15); pts('fair',-5); await say([['kkuri','아이들이 쓰는 물건은 안전이 먼저야! 결국 설치하자마자 사용 금지 표시를 붙였어.']]); }
+    else { pts('tax',5); pts('happy',-10); await say([['city','아이들이 실망했어요… 낡은 미끄럼틀은 여전히 삐걱거려요.']]); }
+  }},
+  { id:'rumor', title:'인터넷에 퍼진 소문', run: async()=>{
+    setScene('village',{chars:[{s:'kkuri',x:70,y:100,sc:1},{s:'tori',x:180,y:100,sc:1}]});
+    await say([['news','“조달청은 물건을 비싸게 산대!”라는 소문이 인터넷에 퍼지고 있어요.']]);
+    const i=await choose('kkuri','어떻게 할까?',['나라장터에 공개된 계약 내용을 함께 보여 준다','소문은 금방 사라지니 무시한다','소문을 낸 사람을 찾아 혼내 준다']);
+    if(i===0){ pts('fair',15); pts('happy',5); await say([['tori','나라장터는 누구나 볼 수 있게 과정이 공개돼. 투명하게 보여 주는 게 제일 좋은 답이지!']]); }
+    else if(i===1){ pts('happy',-10); await say([['kkuri','소문이 더 커져서 시민들이 불안해했어. 모르는 척하면 오해가 쌓여.']]); }
+    else { pts('fair',-5); pts('happy',-5); await say([['tori','화내기보다 사실을 보여 주는 게 먼저야.']]); }
+  }},
+];
+async function villageEvent(pool){
+  const ev=pool.splice(Math.floor(Math.random()*pool.length),1)[0];
+  setStage('마을 사건',ev.title); setScene('village',{chars:[]}); beep('alarm');
+  stageScore={tax:0,fair:0,happy:0}; hud();
+  await button(h(`<div class="stack">${'<div class="news"><b>마을 사건 발생!</b><br>'+esc(ev.title)+'</div>'}<p class="muted small">이번 선택은 되돌릴 수 없어요. 고르는 답에 따라 결과와 엔딩이 달라져요.</p></div>`),'사건 해결하러 가기');
+  await ev.run();
+  for(const k in stageScore) G.score[k]+=stageScore[k]; stageScore={tax:0,fair:0,happy:0}; hud();
+}
+
 /* ================= 엔딩 ================= */
+const ENDINGS = {
+  best:{title:'모두가 웃는 하루', lines:[
+    ['kkuri','아무도 모르게 지나가는 평범한 하루. 그게 바로 우리가 함께 지킨 거야.'],
+    ['tori','책상도, 골목길 불빛도, 방화복도 모두 제자리에 있어. 마을 사람들 모두 웃고 있어!'],
+    ['tori','수고했어, {name}! 넌 이제 진짜 조달러야.']]},
+  normal:{title:'평범한 하루', lines:[
+    ['kkuri','아무도 모르게 지나가는 평범한 하루. 그게 바로 우리가 함께 지킨 거야.'],
+    ['kkuri','조금 아쉬운 선택도 있었지만, 다음엔 더 잘할 수 있을 거야.'],
+    ['tori','수고했어, {name}! 넌 이제 진짜 조달러야.']]},
+  kkoe:{title:'꾀돌이는 아직 어딘가에', lines:[
+    ['kkoe','흐흐… 이번엔 놓쳤지만, 다음 입찰 때는 꼭 이긴다!'],
+    ['tori','꾀돌이를 놓쳤어. 수상한 점은 그 자리에서 바로 말해야 해.'],
+    ['kkuri','그래도 마을의 하루는 지켰어. 수고했어, {name}!']]},
+  trust:{title:'흔들린 약속', lines:[
+    ['news','조달청 직원이 업체에게 선물을 받았다는 사실이 알려졌어요.'],
+    ['kkuri','작은 선물 하나가 모두의 믿음을 흔들 수 있어.'],
+    ['tori','공정함은 아무도 안 볼 때 더 중요해. 다음엔 꼭 거절하자, {name}.']]},
+};
+
 async function ending(){
   setStage('엔딩','오늘을 지키고, 내일을 잇다'); $('#timer').hidden=true;
   setScene('village',{chars:[{s:'tori',x:76,y:70},{s:'me',x:112,y:70},{s:'kkuri',x:148,y:70}]});
-  await say([
-    ['me','처음 지나갔던 학교 앞이네. 아침이랑 똑같아 보이는데, 이제는 다르게 보여.'],
-    ['kkuri','아무도 모르게 지나가는 평범한 하루. 그게 바로 우리가 함께 지킨 거야.'],
-    ['tori','수고했어, {name}! 넌 이제 진짜 조달러야.'],
-  ]);
-  const s=G.score, total=s.tax+s.fair+s.happy;
+  const s=G.score, total=s.tax+s.fair+s.happy, F=G.flags;
+  const endId = F.bribe ? 'trust' : !F.kkoeCaught ? 'kkoe' : (total>=330 && !F.s1bad && !F.s2bad) ? 'best' : 'normal';
+  const END=ENDINGS[endId];
+  await sayOne('me','처음 지나갔던 학교 앞이네. 아침이랑 똑같아 보이는데, 이제는 다르게 보여.');
+  if(endId==='kkoe') SO.chars=[...SO.chars,{s:'kkoe',x:212,y:70,flip:true}];
+  await say(END.lines);
+  const seen=new Set(); try{ (JSON.parse(localStorage.getItem('jodal-endings-v1')||'[]')||[]).forEach(e=>{ if(ENDINGS[e]) seen.add(e); }); }catch(e){}
+  seen.add(endId); try{ localStorage.setItem('jodal-endings-v1',JSON.stringify([...seen])); }catch(e){}
   const rank= total>=330?'프로 조달러': total>=220?'똑똑한 조달러':'새내기 조달러';
   const box=h(`<div class="stack" style="text-align:center;align-items:center">
+    <span class="pill ${endId==='best'?'ok':endId==='normal'?'warn':'bad'}">엔딩 · ${esc(END.title)}</span>
     <h2>당신의 일상 뒤에, 조달청이 있습니다.</h2>
     <div class="rank">${esc(G.name)} · ${rank}</div>
+    <p class="small muted">발견한 엔딩 ${seen.size} / ${Object.keys(ENDINGS).length} · 다른 선택을 하면 다른 엔딩을 볼 수 있어요.</p>
     <div class="result" style="width:100%"><div>세금 절약<b>${s.tax}</b></div><div>공정<b>${s.fair}</b></div><div>시민 행복<b>${s.happy}</b></div></div>
     <p>총점 <b>${total}</b>점 <span class="muted small">(프로 조달러 330점 이상 · 똑똑한 조달러 220점 이상)</span></p>
     ${JUST_UNLOCKED?'<p class="unlock">축하해요! 모든 스테이지를 깨서 첫 화면에 <b>스테이지 바로 가기</b>가 열렸어요.</p>':''}
@@ -973,7 +1077,11 @@ function helpScreen(){
         <li>${ic('tax')}<b>세금 절약</b> – 좋은 물건을 알맞은 가격에 샀을 때</li>
         <li>${ic('fair')}<b>공정</b> – 수상한 업체를 찾아내고 규칙을 지켰을 때</li>
         <li>${ic('happy')}<b>시민 행복</b> – 마을 사람들이 필요한 것을 제때 받았을 때</li></ul>
-        <p class="small muted">잘못 고르면 점수가 깎이지만, 대부분 다시 고를 수 있어요.</p></section>
+        <p class="small muted">수상한 업체 찾기 같은 퍼즐은 다시 도전할 수 있지만, 계약처럼 “되돌릴 수 없어요”라고 적힌 선택은 한 번뿐이에요.</p></section>
+      <section><h3>선택과 사건</h3><ul>
+        <li><b>선택의 결과:</b> 어떤 업체와 계약하는지, 꾀돌이에게 어떻게 대답하는지에 따라 이야기와 점수가 달라져요.</li>
+        <li><b>마을 사건:</b> 스테이지 사이마다 무작위로 사건이 하나씩 생겨요. 할 때마다 다른 사건을 만날 수 있어요.</li>
+        <li><b>여러 엔딩:</b> 내린 선택에 따라 엔딩이 4가지로 갈려요. 모두 찾아보세요!</li></ul></section>
       <section><h3>스테이지 소개</h3><ol>
         <li><b>나라장터에서 공정하게 사기</b> – 학교 책상 100개! 몰래 짠 업체 3곳을 찾고 조건에 맞는 업체와 계약해요.</li>
         <li><b>숨은 혁신제품을 찾아라</b> – 60초 안에 장터에 숨은 새 기술 3개를 찾아요. 번쩍이기만 하는 금색 물건은 함정!</li>
@@ -998,17 +1106,18 @@ const allCleared = () => [1,2,3,4].every(n=>CLEARED.has(n));
 let JUST_UNLOCKED = false;
 function markCleared(n){ const before=allCleared(); CLEARED.add(n); if(!before && allCleared()) JUST_UNLOCKED=true; try{ localStorage.setItem('jodal-clear-v1',JSON.stringify([...CLEARED])); }catch(e){} }
 async function runStage(fn,n){
-  while(true){ stageScore={tax:0,fair:0,happy:0}; hud(); const ok=await fn(); if(ok){ for(const k in stageScore) G.score[k]+=stageScore[k]; stageScore={tax:0,fair:0,happy:0}; hud(); markCleared(n); return; } }
+  while(true){ stageScore={tax:0,fair:0,happy:0}; SF={}; hud(); const ok=await fn(); if(ok){ for(const k in stageScore) G.score[k]+=stageScore[k]; Object.assign(G.flags,SF); stageScore={tax:0,fair:0,happy:0}; hud(); markCleared(n); return; } }
 }
 async function main(){
   while(true){
-    G.score={tax:0,fair:0,happy:0}; stageScore={tax:0,fair:0,happy:0}; hud();
+    G.score={tax:0,fair:0,happy:0}; G.flags={}; stageScore={tax:0,fair:0,happy:0}; hud();
     const start=await titleScreen();
     if(start==='look'){ await lookEditor(); continue; }
     if(start==='help'){ await helpScreen(); continue; }
     if(start===0) await prologue();
     const stages=[stage1,stage2,stage3,stage4];
-    for(let i=Math.max(0,start-1);i<stages.length;i++) await runStage(stages[i],i+1);
+    const pool=[...EVENTS], first=Math.max(0,start-1);
+    for(let i=first;i<stages.length;i++){ if(i>first) await villageEvent(pool); await runStage(stages[i],i+1); }
     await ending();
   }
 }
