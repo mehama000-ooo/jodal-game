@@ -30,7 +30,8 @@ body{color:var(--paper);font-family:var(--px);font-size:16px;line-height:1.7;let
 .icon-btn{font:inherit;background:transparent;color:var(--paper);border:2px solid var(--paper);padding:0 8px;cursor:pointer}
 .screen{position:relative;border:4px solid var(--ink);box-shadow:0 0 0 2px var(--paper2),6px 6px 0 2px #0e1124;background:var(--ink)}
 canvas#scene{display:block;width:100%;aspect-ratio:16/9;max-width:100%}
-body.compact canvas#scene{width:auto;height:clamp(110px,19vh,200px);margin:0 auto}
+body.compact canvas#scene{width:auto;height:clamp(70px,14vh,190px);margin:0 auto}
+.grid .card{font-size:14px;line-height:1.45;padding:6px 10px;gap:1px}.grid .card .name{font-size:16px}.grid .card .memo{font-size:13px;padding-top:2px;margin-top:2px}
 .toasts{position:absolute;right:8px;top:8px;display:flex;flex-direction:column;gap:4px;align-items:flex-end;pointer-events:none}
 .toast{background:var(--ink);color:var(--paper);border:2px solid var(--paper);padding:2px 10px;font-size:15px;animation:rise 1.6s steps(8) forwards}
 .toast.plus{border-color:var(--gold);color:var(--gold)}.toast.minus{border-color:var(--red);color:#ff9aa8}
@@ -74,6 +75,8 @@ body.compact canvas#scene{width:auto;height:clamp(110px,19vh,200px);margin:0 aut
 .card .secret{font-size:15px;background:var(--ink);color:var(--gold);padding:2px 6px;margin-top:4px}
 .req{background:var(--card);border:3px solid var(--ink);padding:14px 16px}
 .req ul{margin:4px 0 0;padding-left:18px}
+.memo-req{background:#fff3c4;padding:4px 10px;font-size:14px;line-height:1.5}.memo-req b:first-child{margin-right:8px}
+.clue{background:#e3f4ec;padding:4px 10px;font-size:14px;line-height:1.5}.clue b:first-child{margin-right:8px}
 .lesson{background:var(--card);border:3px solid var(--ink);padding:14px 16px}
 .lesson ol{margin:4px 0 0;padding-left:20px}
 .pill{display:inline-block;padding:0 8px;border:2px solid var(--ink);font-size:14px;font-weight:700}
@@ -529,10 +532,10 @@ function lesson(title,items){ return button(h(`<div class="stack"><h2>${esc(titl
 function failScreen(title,line){ beep('bad'); return button(h(`<div class="stack"><h2>${esc(title)}</h2><p>${esc(line)}</p><p class="muted small">이번 스테이지에서 얻은 점수는 초기화되고 처음부터 다시 해요.</p></div>`),'다시 도전'); }
 
 /* 카드 고르기: mode 'multi'(여러 장 표시) 또는 'single'(하나 고르기) */
-function pickCards(items,{mode='single',need=1,prompt,btn,tag='선택',render}){
+function pickCards(items,{mode='single',need=1,prompt,btn,tag='선택',render,note=''}){
   return new Promise(res=>{
     const sel=new Set();
-    const box=h(`<div class="stack"><div><h2>${esc(prompt)}</h2><p class="muted small">${mode==='multi'?`카드를 눌러 ${need}곳을 표시하세요. 다시 누르면 취소돼요.`:'카드를 눌러 고른 뒤 아래 버튼을 누르세요.'}</p></div><div class="grid"></div><div class="row"><button class="btn" type="button" disabled>${esc(btn)}</button><span class="muted small cnt"></span></div></div>`);
+    const box=h(`<div class="stack"><div><h2>${esc(prompt)}</h2><p class="muted small">${mode==='multi'?`카드를 눌러 ${need}곳을 표시하세요. 다시 누르면 취소돼요.`:'카드를 눌러 고른 뒤 아래 버튼을 누르세요.'}</p></div>${note}<div class="grid"></div><div class="row"><button class="btn" type="button" disabled>${esc(btn)}</button><span class="muted small cnt"></span></div></div>`);
     const grid=box.querySelector('.grid'), go=box.querySelector('.btn'), cnt=box.querySelector('.cnt');
     const cls = mode==='multi'?'flag':'pick';
     const upd=()=>{ grid.querySelectorAll('.card').forEach(c=>{ const on=sel.has(c.dataset.id); c.classList.toggle(cls,on); c.querySelector('.tag').hidden=!on; c.setAttribute('aria-pressed',on); }); go.disabled = mode==='multi'? sel.size!==need : sel.size!==1; cnt.textContent = mode==='multi'?`${sel.size} / ${need}`:''; };
@@ -602,6 +605,8 @@ const BIDS = [
   {id:'ildung', name:'일등유통', price:69000, days:7, cert:true, q:3, memo:'튼튼하고 안전한 책삭입니다.', collude:true},
 ];
 const won = n => n.toLocaleString('ko-KR')+'원';
+const REQ1 = `<div class="req memo-req"><b>📋 김 선생님 요청서</b> 책상 <b>100개</b> · <b>안전 인증</b> 꼭 있어야 함 · <b>14일 안에</b> 도착</div>`;
+const CLUE1 = `<div class="req clue"><b>🔍 단서</b> <b>가격이 원 단위까지 똑같고</b>, 제안서 <b>문장·오타까지 똑같은</b> 업체 3곳을 찾아요!</div>`;
 const stars = q => '★'.repeat(q)+'☆'.repeat(5-q);
 const bidCard = b => `<span class="name">${esc(b.name)}</span><span>책상 1개 <b>${won(b.price)}</b></span><span>납품까지 ${b.days}일 · 안전 인증 ${b.cert?'있음':'<b style="color:var(--red)">없음</b>'}</span><span>품질 ${stars(b.q)}</span><span class="memo">“${esc(b.memo)}”</span>`;
 
@@ -624,7 +629,7 @@ async function stage1(){
   ]);
   let tries=0; const bidOrder=shuffle(BIDS);
   while(true){
-    const sel=await pickCards(bidOrder,{mode:'multi',need:3,prompt:'수상한 업체 3곳을 찾아 신고하세요',btn:'신고하기',tag:'신고',render:bidCard});
+    const sel=await pickCards(bidOrder,{mode:'multi',need:3,prompt:'수상한 업체 3곳을 찾아 신고하세요',btn:'신고하기',tag:'신고',render:bidCard,note:REQ1+CLUE1});
     tries++;
     const ok=sel.every(id=>BIDS.find(b=>b.id===id).collude);
     if(ok){ pts('fair', tries===1?30:15); break; }
@@ -638,7 +643,7 @@ async function stage1(){
   ]);
   SO.chars=C;
   const rest=bidOrder.filter(b=>!b.collude);
-  const id=await pickCards(rest,{prompt:'남은 업체 중 계약할 곳을 고르세요 (계약은 되돌릴 수 없어요!)',btn:'이 업체와 계약하기',tag:'계약',render:bidCard});
+  const id=await pickCards(rest,{prompt:'남은 업체 중 계약할 곳을 고르세요 (계약은 되돌릴 수 없어요!)',btn:'이 업체와 계약하기',tag:'계약',render:bidCard,note:REQ1});
   setScene('classroom',{chars:[{s:'teacher',x:200,y:56,flip:true},{s:'me',x:12,y:56}]});
   if(id==='barun'){
     pts('tax',30); pts('happy',20);
@@ -870,7 +875,7 @@ function chooseCond(){
 function compareVendors(){
   return new Promise(res=>{
     const out=new Set(), seen=new Set(); let lens=3, mode='lens';
-    const box=h(`<div class="stack"><div><h2>2단계 · 업체 비교하기</h2><p class="small">돋보기로 숨은 정보를 보고, 문제가 있는 업체는 “제외”하세요.</p></div>
+    const box=h(`<div class="stack"><div><h2>2단계 · 업체 비교하기</h2><p class="small">돋보기로 숨은 정보를 보고, 문제가 있는 업체는 “제외”하세요.</p></div><div class="req memo-req"><b>📋 소방서 요청서</b> 불에 강한 소재 · 수량 50벌 · 일주일 안에 도착 · 안전 인증 있음</div>
       <div class="row"><button class="btn" type="button" id="mLens">돋보기 (3번)</button><button class="btn alt" type="button" id="mOut">제외 표시</button><span class="small muted" id="modeTxt">지금: 돋보기 모드</span></div>
       <div class="grid"></div><div class="row"><button class="btn" type="button" id="vNext">비교 끝</button></div></div>`);
     const grid=box.querySelector('.grid'), lensB=box.querySelector('#mLens'), outB=box.querySelector('#mOut'), mt=box.querySelector('#modeTxt');
